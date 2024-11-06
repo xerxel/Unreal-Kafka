@@ -1,0 +1,80 @@
+{
+	"FileVersion": 1,
+	"Version": 1,
+	"VersionName": "2024.11.06",
+	"FriendlyName": "UEKafka",
+	"Description": "UEKafka is a kafka client sub-system that supports Kafka & Red Panda message brokers.",
+	"Category": "Other",
+	"CreatedBy": "El Dockerr - Camaleao Studio",
+	"CreatedByURL": "",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"SupportURL": "https://camaleao-studio.com",
+	"CanContainContent": true,
+	"IsBetaVersion": true,
+	"IsExperimentalVersion": true,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "UEKafka",
+			"Type": "Runtime",
+			"LoadingPhase": "PreLoadingScreen",
+			"PlatformAllowList": [
+				"Win64",
+				"Linux",
+				"LinuxArm64"
+			],
+			"WhitelistPlatforms": [
+				"Win64",
+				"Linux",
+				"LinuxAArch64"
+			]
+		},
+		{
+			"Name": "KafkaConsumer",
+			"Type": "Runtime",
+			"LoadingPhase": "PreLoadingScreen",
+			"PlatformAllowList": [
+				"Win64",
+				"Linux",
+				"LinuxArm64"
+			],
+			"WhitelistPlatforms": [
+				"Win64",
+				"Linux",
+				"LinuxAArch64"
+			]
+		},
+		{
+			"Name": "KafkaProducer",
+			"Type": "Runtime",
+			"LoadingPhase": "PreLoadingScreen",
+			"PlatformAllowList": [
+				"Win64",
+				"Linux",
+				"LinuxArm64"
+			],
+			"WhitelistPlatforms": [
+				"Win64",
+				"Linux",
+				"LinuxAArch64"
+			]
+		},
+		{
+			"Name": "KafkaAdmin",
+			"Type": "Runtime",
+			"LoadingPhase": "PreLoadingScreen",
+			"PlatformAllowList": [
+				"Win64",
+				"Linux",
+				"LinuxArm64"
+			],
+			"WhitelistPlatforms": [
+				"Win64",
+				"Linux",
+				"LinuxAArch64"
+			]
+		}
+	],
+	"Plugins": []
+}
