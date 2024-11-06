@@ -1,12 +1,23 @@
 # Unreal 5.x Kafka subsystem
 
-UEKafka is a Kafka/Redpanda client sub-system for unreal engine. It supports producing and consuming records through blueprint and C++.
+UnrealKafka is a Kafka/Redpanda client sub-system for unreal engine. It supports producing and consuming records through blueprint and C++.
+This is a fork of https://github.com/sha3sha3/UE-EasyKafka and provide further tools and functions to maintain JSON parsing and updates for
+kafka lib sources.
 
 # Supported Platforms
 
  - Windows x86_64
- - Linux x86_64
- - Linux ARM64
+
+# How to Build
+Change to the folder where the batchfiles of UE5 are located abd run RunUAT.bat
+```
+cd C:\Program Files\Epic Games\UE_5.4\Engine\Build\BatchFiles  <- link to your UE5 installation>
+
+.\RunUAT.bat BuildPlugin -plugin="C:\Users\##LINK TO REPO###\UnrealKafka.uplugin" -package="C:\Users\##LINK TO REPO###\UnrealKafka"
+```
+Copy the new created folder where the plugins are stored.
+Enable in Unreal - enjoy.
+
 
 # C++ Modules Link
 
@@ -19,7 +30,7 @@ if(Target.Platform == UnrealTargetPlatform.HoloLens || Target.Platform == Unreal
 
  PrivateDependencyModuleNames.AddRange( new string[]
 {
-    "UEKafka",
+    "UnrealKafka",
     "KafkaLib",
     "KafkaConsumer",
     "KafkaProducer",
@@ -35,31 +46,31 @@ if(Target.Platform == UnrealTargetPlatform.HoloLens || Target.Platform == Unreal
 Create Consumer with default configuration:
 
 ```cpp
-#include "UEKafkaSubsystem.h"
+#include "UnrealKafkaSubsystem.h"
 
-TSharedPtr<FUEKafkaModule> UEKafka = GEngine->GetEngineSubsystem<UUEKafkaSubsystem>()->GetUEKafka();
-UEKafka->GetConsumer()->CreateConsumer(`<BOOTSTRAP_SERVERS_COMMA_SEPARATED>`, `<USERNAME>`, `<TOKEN/PASSWORD>`, (int)EKafkaLogLevel::ERR);
+TSharedPtr<FUnrealKafkaModule> UnrealKafka = GEngine->GetEngineSubsystem<UUnrealKafkaSubsystem>()->GetUnrealKafka();
+UnrealKafka->GetConsumer()->CreateConsumer(`<BOOTSTRAP_SERVERS_COMMA_SEPARATED>`, `<USERNAME>`, `<TOKEN/PASSWORD>`, (int)EKafkaLogLevel::ERR);
 ```
 
 Create Consumer with configuration:
 
 ```cpp
-#include "UEKafkaSubsystem.h"
+#include "UnrealKafkaSubsystem.h"
 
-TSharedPtr<FUEKafkaModule> UEKafka = GEngine->GetEngineSubsystem<UUEKafkaSubsystem>()->GetUEKafka();
+TSharedPtr<FUnrealKafkaModule> UnrealKafka = GEngine->GetEngineSubsystem<UUnrealKafkaSubsystem>()->GetUnrealKafka();
 
 TMap<EKafkaConsumerConfig, FString> KafkaConfiguration =
 {
 	{EKafkaConsumerConfig::CLIENT_ID,"34235"},
 	{EKafkaConsumerConfig::SOCKET_TIMEOUT_MS,"10000"}
 };
-UEKafka->GetConsumer()->CreateConsumer(`<BOOTSTRAP_SERVERS_COMMA_SEPARATED>`, `<USERNAME>`, `<TOKEN/PASSWORD>`, KafkaConfiguration, (int)EKafkaLogLevel::ERR);
+UnrealKafka->GetConsumer()->CreateConsumer(`<BOOTSTRAP_SERVERS_COMMA_SEPARATED>`, `<USERNAME>`, `<TOKEN/PASSWORD>`, KafkaConfiguration, (int)EKafkaLogLevel::ERR);
 ```
 
 Consume messages:
 
 ```cpp
-UEKafka->GetConsumer()->OnNewMessage().AddLambda([](const TArray<FConsumerRecord>& Messages)
+UnrealKafka->GetConsumer()->OnNewMessage().AddLambda([](const TArray<FConsumerRecord>& Messages)
 {
 	for (FConsumerRecord Message : Messages)
 	{
@@ -67,14 +78,14 @@ UEKafka->GetConsumer()->OnNewMessage().AddLambda([](const TArray<FConsumerRecord
 	}
 });
 
-UEKafka->GetConsumer()->Subscribe(
+UnrealKafka->GetConsumer()->Subscribe(
 {
 	"topic",
 	"topic1",
 	"topic2"
 });
 
-UEKafka->GetConsumer()->StartConsuming();
+UnrealKafka->GetConsumer()->StartConsuming();
 ```
 **ATTENTION: MAKE SURE TO COMMIT FROM THE CONSUMER RUNNABLE THREAD BEFORE PROCESSING RECORDS IF YOU DISABLED AUTOCOMMIT.**
 
@@ -89,31 +100,31 @@ UEKafka->GetConsumer()->StartConsuming();
 Create Producer with default configuration:
 
 ```cpp
-#include "UEKafkaSubsystem.h"
+#include "UnrealKafkaSubsystem.h"
 
-TSharedPtr<FUEKafkaModule> UEKafka = GEngine->GetEngineSubsystem<UUEKafkaSubsystem>()->GetUEKafka();
-UEKafka->GetProducer()->CreateProducer(`<BOOTSTRAP_SERVERS_COMMA_SEPARATED>`, `<USERNAME>`, `<TOKEN/PASSWORD>`, (int)EKafkaLogLevel::ERR);
+TSharedPtr<FUnrealKafkaModule> UnrealKafka = GEngine->GetEngineSubsystem<UUnrealKafkaSubsystem>()->GetUnrealKafka();
+UnrealKafka->GetProducer()->CreateProducer(`<BOOTSTRAP_SERVERS_COMMA_SEPARATED>`, `<USERNAME>`, `<TOKEN/PASSWORD>`, (int)EKafkaLogLevel::ERR);
 ```
 
 Create Producer with configuration:
 
 ```cpp
-#include "UEKafkaSubsystem.h"
+#include "UnrealKafkaSubsystem.h"
 
-TSharedPtr<FUEKafkaModule> UEKafka = GEngine->GetEngineSubsystem<UUEKafkaSubsystem>()->GetUEKafka();
+TSharedPtr<FUnrealKafkaModule> UnrealKafka = GEngine->GetEngineSubsystem<UUnrealKafkaSubsystem>()->GetUnrealKafka();
 
 TMap<EKafkaProducerConfig, FString> KafkaConfiguration =
 {
 	{EKafkaProducerConfig::MESSAGE_TIMEOUT_MS,"5000"},
 	{EKafkaProducerConfig::REQUEST_TIMEOUT_MS,"5000"}
 };
-UEKafka->GetProducer()->CreateProducer(`<BOOTSTRAP_SERVERS_COMMA_SEPARATED>`, `<USERNAME>`, `<TOKEN/PASSWORD>`, KafkaConfiguration, (int)EKafkaLogLevel::ERR);
+UnrealKafka->GetProducer()->CreateProducer(`<BOOTSTRAP_SERVERS_COMMA_SEPARATED>`, `<USERNAME>`, `<TOKEN/PASSWORD>`, KafkaConfiguration, (int)EKafkaLogLevel::ERR);
 ```
 
 on record produced/failed to produce callback
 
 ```cpp
-UEKafka->GetProducer()->OnProduce().AddLambda([](const FProducerCallback& Callback)
+UnrealKafka->GetProducer()->OnProduce().AddLambda([](const FProducerCallback& Callback)
 {
 
 	if (Callback.bError)
@@ -129,7 +140,7 @@ UEKafka->GetProducer()->OnProduce().AddLambda([](const FProducerCallback& Callba
 produce record async
 
 ```cpp
-UEKafka->GetProducer()->ProduceRecord('<TOPIC>', '<"RECORD_VALUE>');
+UnrealKafka->GetProducer()->ProduceRecord('<TOPIC>', '<"RECORD_VALUE>');
 
 /*
 More control over your record
@@ -147,7 +158,7 @@ record.Headers = FRecordHeader(
 	{"KeyTwo","ValueTwo"}
 });
 
-UEKafka->GetProducer()->ProduceRecord(record);
+UnrealKafka->GetProducer()->ProduceRecord(record);
 ```
 
 # Kafka Admin Basic Usage
@@ -157,29 +168,29 @@ UEKafka->GetProducer()->ProduceRecord(record);
 Create Admin with default configuration:
 
 ```cpp
-#include "UEKafkaSubsystem.h"
+#include "UnrealKafkaSubsystem.h"
 
-TSharedPtr<FUEKafkaModule> UEKafka = GEngine->GetEngineSubsystem<UUEKafkaSubsystem>()->GetUEKafka();
-UEKafka->GetAdmin()->CreateAdmin(`<BOOTSTRAP_SERVERS_COMMA_SEPARATED>`, `<USERNAME>`, `<TOKEN/PASSWORD>`, (int)EKafkaLogLevel::ERR);
+TSharedPtr<FUnrealKafkaModule> UnrealKafka = GEngine->GetEngineSubsystem<UUnrealKafkaSubsystem>()->GetUnrealKafka();
+UnrealKafka->GetAdmin()->CreateAdmin(`<BOOTSTRAP_SERVERS_COMMA_SEPARATED>`, `<USERNAME>`, `<TOKEN/PASSWORD>`, (int)EKafkaLogLevel::ERR);
 ```
 Create Admin with configuration:
 
 ```cpp
-#include "UEKafkaSubsystem.h"
+#include "UnrealKafkaSubsystem.h"
 
-TSharedPtr<FUEKafkaModule> UEKafka = GEngine->GetEngineSubsystem<UUEKafkaSubsystem>()->GetUEKafka();
+TSharedPtr<FUnrealKafkaModule> UnrealKafka = GEngine->GetEngineSubsystem<UUnrealKafkaSubsystem>()->GetUnrealKafka();
 
 TMap<EKafkaAdminConfig, FString> KafkaConfiguration =
 {
 	{EKafkaAdminConfig::SOCKET_TIMEOUT_MS,"10000"}
 };
-UEKafka->GetAdmin()->CreateAdmin(`<BOOTSTRAP_SERVERS_COMMA_SEPARATED>`, `<USERNAME>`, `<TOKEN/PASSWORD>`, KafkaConfiguration, (int)EKafkaLogLevel::ERR);
+UnrealKafka->GetAdmin()->CreateAdmin(`<BOOTSTRAP_SERVERS_COMMA_SEPARATED>`, `<USERNAME>`, `<TOKEN/PASSWORD>`, KafkaConfiguration, (int)EKafkaLogLevel::ERR);
 ```
 Simple Admin request example:
 
 ```cpp
 const TArray<FString> TopicsToDelete = { "Topic1Name", "Topic2Name" };
-FAdminRequestResult Result = UEKafka->GetAdmin()->DeleteTopics(TopicsToDelete);
+FAdminRequestResult Result = UnrealKafka->GetAdmin()->DeleteTopics(TopicsToDelete);
 
 if (Result.bError)
 {

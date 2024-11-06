@@ -1,19 +1,19 @@
-// Copyright (c) 2024 ElDockerr
+// Copyright (c) 2022-2023 MrShaaban, Mohamad Shaaban, https://github.com/sha3sha3/UE-EasyKafka.
 
-#include "UEKafka.h"
+#include "EasyKafka.h"
 #include "KafkaConsumer.h"
 #include "KafkaProducer.h"
 #include "KafkaAdmin.h"
 
 
-#define LOCTEXT_NAMESPACE "FUEKafkaModule"
+#define LOCTEXT_NAMESPACE "FEasyKafkaModule"
 
-FUEKafkaModule* FUEyKafkaModule::UEKafka = nullptr;
+FEasyKafkaModule* FEasyKafkaModule::EasyKafka = nullptr;
 
-void FUEKafkaModule::StartupModule()
+void FEasyKafkaModule::StartupModule()
 {
-	if (!UEKafka)
-		UEKafka = this;
+	if (!EasyKafka)
+		EasyKafka = this;
 	else
 		return;
 	if (!KafkaConsumer) {
@@ -30,24 +30,24 @@ void FUEKafkaModule::StartupModule()
 	}
 }
 
-void FUEKafkaModule::ShutdownModule()
+void FEasyKafkaModule::ShutdownModule()
 {
 		
 }
 
 
-FUEKafkaModule& FUEKafkaModule::Get()
+FEasyKafkaModule& FEasyKafkaModule::Get()
 {
-	if (UEKafka == nullptr)
+	if (EasyKafka == nullptr)
 	{
 		check(IsInGameThread());
-		FModuleManager::LoadModuleChecked<FKafkaProducerModule>("FUEKafkaModule");
+		FModuleManager::LoadModuleChecked<FKafkaProducerModule>("FEasyKafkaModule");
 	}
-	check(UEKafka);
+	check(EasyKafka);
 
-	return *UEKafka;
+	return *EasyKafka;
 }
 
 #undef LOCTEXT_NAMESPACE
 	
-IMPLEMENT_MODULE(FUEKafkaModule, UEKafka)
+IMPLEMENT_MODULE(FEasyKafkaModule, EasyKafka)

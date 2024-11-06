@@ -1,18 +1,19 @@
-// Copyright (c) 2024 ElDockerr
+// Copyright (c) 2022-2023 MrShaaban, Mohamad Shaaban, https://github.com/sha3sha3/UE-EasyKafka.
 
 using System;
 using System.IO;
 using UnrealBuildTool;
 
-public class UEKafka : ModuleRules
+public class EasyKafka : ModuleRules
 {
-	public UEKafka(ReadOnlyTargetRules Target) : base(Target)
+	public EasyKafka(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 		CppStandard = CppStandardVersion.Cpp17;
 
 		PublicIncludePaths.AddRange(
 			new string[] {
+				// ... add public include paths required here ...
 				Path.Combine(PluginDirectory,"Source/KafkaConsumer/Public"),
                 Path.Combine(PluginDirectory,"Source/KafkaProducer/Public")
             }
@@ -31,6 +32,7 @@ public class UEKafka : ModuleRules
 			{
 				"Core",
 				"CoreUObject"
+				// ... add other public dependencies that you statically link with here ...
 			}
 			);
 
@@ -43,12 +45,12 @@ public class UEKafka : ModuleRules
 				"KafkaConsumer",
 				"KafkaProducer",
 				"KafkaAdmin"
+				// ... add private dependencies that you statically link with here ...	
 			}
 			);
 		bEnableExceptions = true;
 
-		// RTTI will be only available on Windows
-		if(Target.Platform != UnrealTargetPlatform.Win64)
-			bUseRTTI = true;
+		if(Target.Platform == UnrealTargetPlatform.Win64)
+			bUseRTTI = true;//Avoid using RTTI on limux
     }
 }

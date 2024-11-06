@@ -1,8 +1,12 @@
 BSD 2-Clause License
 
-Copyright (c) 2024, ElDockerr
-https://github.com/eldockerr
+Copyright (c) 2024, El Dockerr
+https://github.com/el-dockerr/Unreal-Kafka
 All rights reserved.
+
+Original Based on Easy Kafka
+Copyright (c) 2022-2023 MrShaaban, 
+https://github.com/sha3sha3/UE-EasyKafka.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:

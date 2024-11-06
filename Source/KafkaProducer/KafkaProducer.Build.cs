@@ -1,4 +1,4 @@
-// Copyright (c) 2024 ElDockerr
+// Copyright (c) 2022-2023 MrShaaban, Mohamad Shaaban, https://github.com/sha3sha3/UE-EasyKafka.
 
 using System;
 using System.IO;
@@ -14,6 +14,7 @@ public class KafkaProducer : ModuleRules
 
         PublicIncludePaths.AddRange(
 			new string[] {
+				// ... add public include paths required here ...
 				Path.Combine(PluginDirectory,"Source/KafkaProducer/Public")
 			}
 			);
@@ -31,6 +32,7 @@ public class KafkaProducer : ModuleRules
 			{
 				"Core",
 				"CoreUObject"
+				// ... add other public dependencies that you statically link with here ...
 			}
 			);
 
@@ -40,6 +42,7 @@ public class KafkaProducer : ModuleRules
 			{
 				"Engine",
 				"KafkaLib"
+				// ... add private dependencies that you statically link with here ...	
 			}
 			);
 		bEnableExceptions = true;

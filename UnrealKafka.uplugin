@@ -1,0 +1,64 @@
+{
+	"FileVersion": 1,
+	"Version": 1,
+	"VersionName": "2024.11.6",
+	"FriendlyName": "UnrealKafka",
+	"Description": "UnrealKafka is a kafka client sub-system that supports Kafka & Red Panda message brokers.",
+	"Category": "Other",
+	"CreatedBy": "El Dockerr Camaleao Studio",
+	"CreatedByURL": "https://camaleao-studio.com",
+	"DocsURL": "none",
+	"MarketplaceURL": "none",
+	"SupportURL": "https://camaleao-studio.com",
+	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": false,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "KafkaConsumer",
+			"Type": "Runtime",
+			"LoadingPhase": "PreLoadingScreen",
+			"PlatformAllowList": [
+				"Win64"
+			],
+			"WhitelistPlatforms": [
+				"Win64"
+			]
+		},
+		{
+			"Name": "KafkaProducer",
+			"Type": "Runtime",
+			"LoadingPhase": "PreLoadingScreen",
+			"PlatformAllowList": [
+				"Win64"
+			],
+			"WhitelistPlatforms": [
+				"Win64"
+			]
+		},
+		{
+			"Name": "KafkaAdmin",
+			"Type": "Runtime",
+			"LoadingPhase": "PreLoadingScreen",
+			"PlatformAllowList": [
+				"Win64"
+			],
+			"WhitelistPlatforms": [
+				"Win64"
+			]
+		},
+		{
+			"Name": "EasyKafka",
+			"Type": "Runtime",
+			"LoadingPhase": "PreLoadingScreen",
+			"PlatformAllowList": [
+				"Win64"
+			],
+			"WhitelistPlatforms": [
+				"Win64"
+			]
+		}
+	],
+	"Plugins": []
+}

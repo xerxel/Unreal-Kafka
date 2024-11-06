@@ -1,4 +1,4 @@
-// Copyright (c) 2024 ElDockerr
+// Copyright (c) 2022-2023 MrShaaban, Mohamad Shaaban, https://github.com/sha3sha3/UE-EasyKafka.
 
 #pragma once
 
@@ -7,7 +7,7 @@
 #include "KafkaProducer.h"
 #include "KafkaAdmin.h"
 
-class UEKAFKA_API FUEKafkaModule : public IModuleInterface
+class EASYKAFKA_API FEasyKafkaModule : public IModuleInterface
 {
 public:
 
@@ -45,12 +45,12 @@ public:
 	/**
 	* Get Easy kafka singleton.
 	*
-	* @return FUEKafkaModule ref.
+	* @return FEasyKafkaModule ref.
 	*/
-	static FUEKafkaModule& Get();
+	static FEasyKafkaModule& Get();
 private:
 	TSharedPtr<FKafkaConsumerModule> KafkaConsumer = nullptr;
 	TSharedPtr<FKafkaProducerModule> KafkaProducer = nullptr;
 	TSharedPtr<FKafkaAdminModule> KafkaAdmin = nullptr;
-	static FUEKafkaModule* UEKafka;
+	static FEasyKafkaModule* EasyKafka;
 };
