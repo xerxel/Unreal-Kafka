@@ -16,6 +16,17 @@
 	"Installed": false,
 	"Modules": [
 		{
+			"Name": "EasyJsonParser",
+			"Type": "Runtime",
+			"LoadingPhase": "PreLoadingScreen",
+			"PlatformAllowList": [
+				"Win64"
+			],
+			"WhitelistPlatforms": [
+				"Win64"
+			]
+		},
+		{
 			"Name": "KafkaConsumer",
 			"Type": "Runtime",
 			"LoadingPhase": "PreLoadingScreen",
@@ -58,7 +69,6 @@
 			"WhitelistPlatforms": [
 				"Win64"
 			]
-		}
-	],
+		}	],
 	"Plugins": []
 }

@@ -1,4 +1,4 @@
-// Copyright (c) 2022-2023 MrShaaban, Mohamad Shaaban, https://github.com/sha3sha3/UE-EasyKafka.
+// Copyright (c) 2024 - El Dockerr 
 
 #pragma once
 
@@ -37,11 +37,11 @@ public:
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCommit, const FConsumerCallback&, CommitCallback);
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnNewMessage,const TArray<FConsumerRecord>&, Messages);
 
-	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Create Cunsumer", ToolTip = "Create a kafka Consumer. Call it once.", Keywords = "EasyKafka sample test testing"), Category = "EasyKafka|Consumer")
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Create Consumer", ToolTip = "Create a kafka Consumer. Call it once.", Keywords = "EasyKafka sample test testing"), Category = "EasyKafka|Consumer")
 		 void CreateConsumerDefault(FString Servers, FString UserName, FString Password, EKafkaLogLevel KafkaLogLevel = EKafkaLogLevel::ERR);
-	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Create Cunsumer", ToolTip = "Create a kafka Consumer. Call it once.", Keywords = "EasyKafka sample test testing"), Category = "EasyKafka|Consumer")
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Create Consumer", ToolTip = "Create a kafka Consumer. Call it once.", Keywords = "EasyKafka sample test testing"), Category = "EasyKafka|Consumer")
 		 void CreateConsumer(FString Servers, FString UserName, FString Password, TMap<EKafkaConsumerConfig, FString> Configuration, EKafkaLogLevel KafkaLogLevel = EKafkaLogLevel::ERR);
-	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Create Cunsumer", ToolTip = "Create a kafka Consumer. Call it once.", Keywords = "EasyKafka sample test testing"), Category = "EasyKafka|Consumer")
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Create Consumer", ToolTip = "Create a kafka Consumer. Call it once.", Keywords = "EasyKafka sample test testing"), Category = "EasyKafka|Consumer")
 		 void CreateConsumerStr(FString Servers, FString UserName, FString Password, TMap<FString, FString> Configuration, EKafkaLogLevel KafkaLogLevel = EKafkaLogLevel::ERR);
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Subscribe", ToolTip = "Subscribe to topics", Keywords = "EasyKafka sample test testing"), Category = "EasyKafka|Consumer")
 		 void Subscribe(TArray<FString> Topics, int Timeout=1000 );
