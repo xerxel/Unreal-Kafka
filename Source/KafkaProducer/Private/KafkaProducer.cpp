@@ -311,4 +311,4 @@ const FString FKafkaProducerModule::GetKafkaConfigString(EKafkaProducerConfig Ka
 
 #undef LOCTEXT_NAMESPACE
 	
-IMPLEMENT_MODULE(FKafkaProducerModule, kafkaProducer)
+IMPLEMENT_MODULE(FKafkaProducerModule, KafkaProducer)
