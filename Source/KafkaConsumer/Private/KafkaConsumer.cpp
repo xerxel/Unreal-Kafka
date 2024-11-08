@@ -8,6 +8,34 @@
 DEFINE_LOG_CATEGORY(LogKafkaConsumer);
 #define LOCTEXT_NAMESPACE "FKafkaConsumerModule"
 
+void ParseEventHubConnectionString(const FString& ConnectionString, 
+    FString& BrokerList, FString& Username, FString& Password)
+{
+    // Parse Endpoint
+    FString Endpoint;
+    if (ConnectionString.Split(TEXT("Endpoint=sb://"), nullptr, &Endpoint))
+    {
+        FString HostName;
+        Endpoint.Split(TEXT(";"), &HostName, nullptr);
+        // Event Hubs Kafka endpoint uses port 9093
+        BrokerList = FString::Printf(TEXT("%s:9093"), *HostName);
+    }
+
+    // Parse SharedAccessKeyName (becomes username)
+    FString KeyName;
+    if (ConnectionString.Split(TEXT("SharedAccessKeyName="), nullptr, &KeyName))
+    {
+        KeyName.Split(TEXT(";"), &Username, nullptr);
+    }
+
+    // Parse SharedAccessKey (becomes password)
+    FString Key;
+    if (ConnectionString.Split(TEXT("SharedAccessKey="), nullptr, &Key))
+    {
+        Key.Split(TEXT(";"), &Password, nullptr);
+    }
+}
+
 FKafkaConsumerModule* FKafkaConsumerModule::ConsumerSingleton = nullptr;
 
 
@@ -170,37 +198,49 @@ void FKafkaConsumerModule::CreateConsumer(FString Servers, FString UserName, FSt
 
 void FKafkaConsumerModule::CreateConsumer(FString Servers, FString UserName, FString Password, const TMap<FString, FString>& Configuration, int KafkaLogLevel)
 {
-	
-	/*
-	should not be required unless you are in  the editor
-	Or you call Create Consumer multiple times
-	P.S: Module is singleton but Consumer is not
-	meaning multiple CreateConsumer will override Consumer value
-	*/
-	StopConsuming();
+    StopConsuming();
 
-	if (KafkaConsumerProps)
-		delete KafkaConsumerProps;
-	if (Consumer)
-		delete Consumer;
+    if (KafkaConsumerProps)
+        delete KafkaConsumerProps;
+    if (Consumer)
+        delete Consumer;
 
+    // Check if this is an Event Hubs connection string
+    if (Servers.StartsWith(TEXT("Endpoint=sb://")))
+    {
+        FString BrokerList, EventHubUsername, EventHubPassword;
+        ParseEventHubConnectionString(Servers, BrokerList, EventHubUsername, EventHubPassword);
+        
+        KafkaConsumerProps = new kafka::Properties({
+            {"bootstrap.servers", std::string(TCHAR_TO_UTF8(*BrokerList))},
+            {"security.protocol", "SASL_SSL"},
+            {"sasl.mechanisms", "PLAIN"},
+            {"ssl.ca.location", "probe"},
+            {"auto.offset.reset", "earliest"},
+            {"enable.auto.commit", "true"},
+            {"log_level", std::to_string(KafkaLogLevel)}
+        });
 
-	KafkaConsumerProps = new kafka::Properties({
-		   {"bootstrap.servers",  std::string(TCHAR_TO_UTF8(*Servers))},
-		   {"enable.auto.commit", {"true"}},
-		   {"log_level",  std::to_string(KafkaLogLevel)}
-		});
-	/*
-	Create producer/consumer with no usr/passwd
-	*/
-	if (!UserName.Equals("") && !Password.Equals(""))
-	{
-		KafkaConsumerProps->put("security.protocol", "SASL_SSL");
-		KafkaConsumerProps->put("sasl.mechanisms", "PLAIN");
-		KafkaConsumerProps->put("enable.ssl.certificate.verification", "false");
-		KafkaConsumerProps->put("sasl.username", std::string(TCHAR_TO_UTF8(*UserName)));
-		KafkaConsumerProps->put("sasl.password", std::string(TCHAR_TO_UTF8(*Password)));
-	}
+        KafkaConsumerProps->put("sasl.username", std::string(TCHAR_TO_UTF8(*EventHubUsername)));
+        KafkaConsumerProps->put("sasl.password", std::string(TCHAR_TO_UTF8(*EventHubPassword)));
+    }
+    else
+    {
+        KafkaConsumerProps = new kafka::Properties({
+            {"bootstrap.servers",  std::string(TCHAR_TO_UTF8(*Servers))},
+            {"enable.auto.commit", "true"},
+            {"log_level",  std::to_string(KafkaLogLevel)}
+        });
+
+        if (!UserName.Equals("") && !Password.Equals(""))
+        {
+            KafkaConsumerProps->put("security.protocol", "SASL_SSL");
+            KafkaConsumerProps->put("sasl.mechanisms", "PLAIN");
+            KafkaConsumerProps->put("enable.ssl.certificate.verification", "false");
+            KafkaConsumerProps->put("sasl.username", std::string(TCHAR_TO_UTF8(*UserName)));
+            KafkaConsumerProps->put("sasl.password", std::string(TCHAR_TO_UTF8(*Password)));
+        }
+    }
 
 	for (const TPair<FString, FString>& pair : Configuration)
 	{

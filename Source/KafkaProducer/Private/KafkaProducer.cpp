@@ -8,6 +8,34 @@
 DEFINE_LOG_CATEGORY(LogKafkaProducer);
 #define LOCTEXT_NAMESPACE "FKafkaProducerModule"
 
+void ParseEventHubConnectionString(const FString& ConnectionString, 
+    FString& BrokerList, FString& Username, FString& Password)
+{
+    // Parse Endpoint
+    FString Endpoint;
+    if (ConnectionString.Split(TEXT("Endpoint=sb://"), nullptr, &Endpoint))
+    {
+        FString HostName;
+        Endpoint.Split(TEXT(";"), &HostName, nullptr);
+        // Event Hubs Kafka endpoint uses port 9093
+        BrokerList = FString::Printf(TEXT("%s:9093"), *HostName);
+    }
+
+    // Parse SharedAccessKeyName (becomes username)
+    FString KeyName;
+    if (ConnectionString.Split(TEXT("SharedAccessKeyName="), nullptr, &KeyName))
+    {
+        KeyName.Split(TEXT(";"), &Username, nullptr);
+    }
+
+    // Parse SharedAccessKey (becomes password)
+    FString Key;
+    if (ConnectionString.Split(TEXT("SharedAccessKey="), nullptr, &Key))
+    {
+        Key.Split(TEXT(";"), &Password, nullptr);
+    }
+}
+
 FKafkaProducerModule* FKafkaProducerModule::ProducerSingleton=nullptr;
 
 void FKafkaProducerModule::StartupModule()
@@ -61,28 +89,46 @@ void FKafkaProducerModule::CreateProducer(FString Servers, FString UserName, FSt
 
 void FKafkaProducerModule::CreateProducer(FString Servers, FString UserName, FString Password, TMap<FString, FString> Configuration, bool bAutoEventPool, int KafkaLogLevel)
 {
-	if (KafkaProducerProps)
-		delete KafkaProducerProps;
-	if (Producer) 
-	{
-		Producer->close();
-		delete Producer;
-	}
+    if (KafkaProducerProps)
+        delete KafkaProducerProps;
+    if (Producer) 
+    {
+        Producer->close();
+        delete Producer;
+    }
 
-	KafkaProducerProps = new kafka::Properties({
-		   {"bootstrap.servers",  std::string(TCHAR_TO_UTF8(*Servers))},
-		   {"log_level",  std::to_string(KafkaLogLevel)}
-		});
-	/*
-	Create producer/consumer with no usr/passwd
-	*/
-	if (!UserName.Equals("") && !Password.Equals(""))
-	{
-		KafkaProducerProps->put("security.protocol", "SASL_SSL");
-		KafkaProducerProps->put("sasl.mechanisms", "PLAIN");
-		KafkaProducerProps->put("sasl.username", std::string(TCHAR_TO_UTF8(*UserName)));
-		KafkaProducerProps->put("sasl.password", std::string(TCHAR_TO_UTF8(*Password)));
-	}
+    // Check if this is an Event Hubs connection string
+    if (Servers.StartsWith(TEXT("Endpoint=sb://")))
+    {
+        FString BrokerList, EventHubUsername, EventHubPassword;
+        ParseEventHubConnectionString(Servers, BrokerList, EventHubUsername, EventHubPassword);
+        
+        KafkaProducerProps = new kafka::Properties({
+            {"bootstrap.servers", std::string(TCHAR_TO_UTF8(*BrokerList))},
+            {"security.protocol", "SASL_SSL"},
+            {"sasl.mechanisms", "PLAIN"},
+            {"ssl.ca.location", "probe"},
+            {"log_level", std::to_string(KafkaLogLevel)}
+        });
+
+        KafkaProducerProps->put("sasl.username", std::string(TCHAR_TO_UTF8(*EventHubUsername)));
+        KafkaProducerProps->put("sasl.password", std::string(TCHAR_TO_UTF8(*EventHubPassword)));
+    }
+    else
+    {
+        KafkaProducerProps = new kafka::Properties({
+            {"bootstrap.servers",  std::string(TCHAR_TO_UTF8(*Servers))},
+            {"log_level",  std::to_string(KafkaLogLevel)}
+        });
+
+        if (!UserName.Equals("") && !Password.Equals(""))
+        {
+            KafkaProducerProps->put("security.protocol", "SASL_SSL");
+            KafkaProducerProps->put("sasl.mechanisms", "PLAIN");
+            KafkaProducerProps->put("sasl.username", std::string(TCHAR_TO_UTF8(*UserName)));
+            KafkaProducerProps->put("sasl.password", std::string(TCHAR_TO_UTF8(*Password)));
+        }
+    }
 
 	for (const TPair<FString, FString>& pair : Configuration)
 	{
