@@ -4,9 +4,19 @@ UnrealKafka is a Kafka/Redpanda client sub-system for unreal engine. It supports
 This is a fork of https://github.com/sha3sha3/UE-EasyKafka and provide further tools and functions to maintain JSON parsing and updates for
 kafka lib sources.
 
+- Kafka Connector (including SSL Support)
+- Kafka Message Producer
+- Kafka Message Consumer
+- JSON Parser
+
 # Supported Platforms
 
  - Windows x86_64
+
+# Lazy Path
+Download the Binariers from `https://camaleao-studio.com/downloads/` and unzip them.
+Place the whole Folder into yor Unreal Engine Plugin folder (e.g. `C:\Program Files\Epic Games\UE_5.4\Engine\Plugins`).
+Enjoy!
 
 # How to Build
 Change to the folder where the batchfiles of UE5 are located abd run RunUAT.bat
