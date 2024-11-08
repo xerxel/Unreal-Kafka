@@ -13,6 +13,13 @@ kafka lib sources.
 
  - Windows x86_64
 
+
+# Tutorial
+
+[<img src="https://img.youtube.com/vi/6_4jPQnlvjA/hqdefault.jpg" width="600" height="300" />](https://www.youtube.com/embed/6_4jPQnlvjA) 
+
+
+
 # Lazy Path
 Download the Binariers from https://camaleao-studio.com/downloads and unzip them.
 Place the whole Folder into yor Unreal Engine Plugin folder (e.g. `C:\Program Files\Epic Games\UE_5.4\Engine\Plugins`).
