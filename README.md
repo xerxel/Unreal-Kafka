@@ -16,7 +16,7 @@ kafka lib sources.
 
 # Tutorial
 
-[<img src="https://img.youtube.com/vi/6_4jPQnlvjA/hqdefault.jpg" width="600" height="300" />](https://youtu.be/6_4jPQnlvjA) 
+[<img src="https://img.youtube.com/vi/GT__ZSHAnIA/hqdefault.jpg" width="600" height="300" />](https://youtu.be/GT__ZSHAnIA) 
 
 
 
